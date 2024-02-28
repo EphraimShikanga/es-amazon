@@ -1,21 +1,21 @@
-import express, { json } from "express";
-import request from "request-promise";
+const express = require("express");
+const request = require("request-promise");
 const dotenv =  require('dotenv').config();
 const app = express();
 
 const PORT = process.env.PORT;
 
-import { json as _json, urlencoded } from "body-parser";
-import cors from "cors";
+const bodyParser = require("body-parser");
+const cors = require("cors");
 app.use(cors());
-app.use(_json({ limit: "30mb", extended: true }));
-app.use(urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 
 const apiKey = process.env.API_KEY;
 
 const baseUrl = `http://api.scraperapi.com/?api_key=${apiKey}&autoparse=true`;
-app.use(json());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Welcome to Amazon scraper API");
@@ -69,7 +69,7 @@ app.get("/search/:searchQuery", async (req, res) => {
     );
     const parsedResponse = JSON.parse(response);
     const sortedResults = sortResults(parsedResponse.results);
-    const top10Results = sortedResults.slice(0, 10);
+    const top10Results = sortedResults.slice(0, 20);
     res.json({ results: top10Results });
   } catch (error) {
     res.json(error);
@@ -84,6 +84,7 @@ function sortResults(results) {
       return starsComparison;
     }
 
+    // Sort by highest price
     const priceComparison = b.price - a.price;
     return priceComparison;
   });
