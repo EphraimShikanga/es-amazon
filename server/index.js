@@ -1,13 +1,24 @@
 const express = require("express");
 const request = require("request-promise");
 const dotenv =  require('dotenv').config();
+const cors = require("cors");
 const app = express();
+app.use(cors());
+
+//CORS middleware
+// var corsMiddleware = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', 'localhost:5000'); //replace localhost with actual host
+//     res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+
+//     next();
+// }
+
+// app.use(corsMiddleware);
 
 const PORT = process.env.PORT;
 
 const bodyParser = require("body-parser");
-const cors = require("cors");
-app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
@@ -27,7 +38,7 @@ app.get("/products/:productId", async (req, res) => {
   const { productId } = req.params;
   try {
     const response = await request(
-      `${baseUrl}&url=https://www.amazon.com/dp/${productId}`
+      `${baseUrl}&url=http://www.amazon.com/dp/${productId}`
     );
     res.json(JSON.parse(response));
   } catch (error) {
@@ -40,7 +51,7 @@ app.get("/products/:productId/reviews", async (req, res) => {
   const { productId } = req.params;
   try {
     const response = await request(
-      `${baseUrl}&url=https://www.amazon.com/product-reviews/${productId}`
+      `${baseUrl}&url=http://www.amazon.com/product-reviews/${productId}`
     );
     res.json(JSON.parse(response));
   } catch (error) {
@@ -53,7 +64,7 @@ app.get("/products/:productId/offers", async (req, res) => {
   const { productId } = req.params;
   try {
     const response = await request(
-      `${baseUrl}&url=https://www.amazon.com/gp/offer-listing/${productId}`
+      `${baseUrl}&url=http://www.amazon.com/gp/offer-listing/${productId}`
     );
     res.json(JSON.parse(response));
   } catch (error) {
@@ -65,7 +76,7 @@ app.get("/search/:searchQuery", async (req, res) => {
   const { searchQuery } = req.params;
   try {
     const response = await request(
-      `${baseUrl}&url=https://www.amazon.com/s?k=${searchQuery}`
+      `${baseUrl}&url=http://www.amazon.com/s?k=${searchQuery}`
     );
     const parsedResponse = JSON.parse(response);
     const sortedResults = sortResults(parsedResponse.results);
