@@ -5,17 +5,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-//CORS middleware
-// var corsMiddleware = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', 'localhost:5000'); //replace localhost with actual host
-//     res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-
-//     next();
-// }
-
-// app.use(corsMiddleware);
-
 const PORT = process.env.PORT;
 
 const bodyParser = require("body-parser");
@@ -46,31 +35,6 @@ app.get("/products/:productId", async (req, res) => {
   }
 });
 
-// Get Product Reviews
-app.get("/products/:productId/reviews", async (req, res) => {
-  const { productId } = req.params;
-  try {
-    const response = await request(
-      `${baseUrl}&url=http://www.amazon.com/product-reviews/${productId}`
-    );
-    res.json(JSON.parse(response));
-  } catch (error) {
-    res.json(error);
-  }
-});
-
-// Get Product Offers
-app.get("/products/:productId/offers", async (req, res) => {
-  const { productId } = req.params;
-  try {
-    const response = await request(
-      `${baseUrl}&url=http://www.amazon.com/gp/offer-listing/${productId}`
-    );
-    res.json(JSON.parse(response));
-  } catch (error) {
-    res.json(error);
-  }
-});
 // Get Search Results
 app.get("/search/:searchQuery", async (req, res) => {
   const { searchQuery } = req.params;
@@ -100,6 +64,32 @@ function sortResults(results) {
     return priceComparison;
   });
 }
+
+// Get Product Reviews
+app.get("/products/:productId/reviews", async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const response = await request(
+      `${baseUrl}&url=http://www.amazon.com/product-reviews/${productId}`
+    );
+    res.json(JSON.parse(response));
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+// Get Product Offers
+app.get("/products/:productId/offers", async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const response = await request(
+      `${baseUrl}&url=http://www.amazon.com/gp/offer-listing/${productId}`
+    );
+    res.json(JSON.parse(response));
+  } catch (error) {
+    res.json(error);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT} `);

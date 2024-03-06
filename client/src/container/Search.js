@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 const Search = ({ query, setQuery, pos, setPos }) => {
   const navigate = useNavigate();
 
+
   setPos("fixed");
   // handle click event to fetch search query details and then navigate to search/searchQuery
   const handleClick = async (e) => {
